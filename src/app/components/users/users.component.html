@@ -1,34 +1,47 @@
 <div class="container">
-  <div>>> Create</div>
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Id</th>
-        <th>Name</th>
-        <th>Firstname</th>
-        <th>Email</th>
-        <th>Updated at</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let user of users">
-        <td>{{ user.id }}</td>
-        <td>{{ user.name }}</td>
-        <td>{{ user.firstname }}</td>
-        <td>{{ user.email }}</td>
-        <td>{{ user.updated_at | date: 'yyyy-mm-dd HH:mm' }}</td>
-        <td>
-          <button
-            (click)="goToUserProfile(user.id)"
-            type="button"
-            class="btn btn-light"
-            title="Profile of {{ user.firstname }} {{ user.name }}"
-          >
-            <i class="fa fa-eye" aria-hidden="true"></i>
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <!-- NAV -->
+  <div>
+    <button (click)="displayUserForm()" type="button" class="btn btn-secondary">New user</button>
+  </div>
+
+  <!-- USER FORM -->
+  <div *ngIf="isUserFormActive">
+    <app-user-form (updatedUser)="onUpdatedUser($event)"></app-user-form>
+  </div>
+
+  <!--USER LIST -->
+  <div class="card mt-5 p-3">
+    <h2 class="text-center">User list</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Id</th>
+          <th>Name</th>
+          <th>Firstname</th>
+          <th>Email</th>
+          <th>Updated at</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users">
+          <td>{{ user.id }}</td>
+          <td>{{ user.name }}</td>
+          <td>{{ user.firstname }}</td>
+          <td>{{ user.email }}</td>
+          <td>{{ user.updated_at | date: 'yyyy-mm-dd HH:mm' }}</td>
+          <td>
+            <button
+              (click)="goToUserProfile(user.id)"
+              type="button"
+              class="btn btn-light"
+              title="Profile of {{ user.firstname }} {{ user.name }}"
+            >
+              <i class="fa fa-eye" aria-hidden="true"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

@@ -13,6 +13,7 @@ import { UserService } from '../../services/user.service';
 })
 export class UsersComponent implements OnInit {
   public users: User[] = [];
+  public isUserFormActive: boolean = true;
 
   private getUserSub: Subscription;
 
@@ -49,12 +50,33 @@ export class UsersComponent implements OnInit {
   }
 
   /**
+   * Display user form
+   * @returns {void}
+   */
+  public displayUserForm(): void {
+    this.isUserFormActive = !this.isUserFormActive;
+  }
+
+  /**
+   * On updated user from form refresh user list
+   * @param {User} user
+   * @returns {void}
+   */
+  public onUpdatedUser(user: User): void {
+    if (user && user.id) {
+      this.getUsers();
+    }
+  }
+
+  /* PRIVATE */
+
+  /**
    * Display error helper
    * @param {any} error
    * @returns {void}
    */
   private displayError(error: any): void {
-    Swal.fire({ icon: 'warning', text: 'une erreur est survenue. Veuillez réesayer ultérieurement...' });
+    Swal.fire({ icon: 'warning', text: 'An error has occurred. Please try again later...' });
   }
 
   /**
