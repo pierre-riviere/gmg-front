@@ -1,6 +1,5 @@
-import { HttpErrorResponse } from '@angular/common/http';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import Swal from 'sweetalert2';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ServiceHelper } from '../../helpers/service.helper';
 import { User } from '../../models/user.interface';
 import { UserService } from '../../services/user.service';
 
@@ -8,20 +7,34 @@ import { UserService } from '../../services/user.service';
   selector: 'app-user-form',
   templateUrl: './user-form.component.html',
   styleUrls: ['./user-form.component.scss'],
-  providers: [UserService],
+  providers: [UserService, ServiceHelper],
 })
 export class UserFormComponent implements OnInit {
+  /** user to handle */
+  private _user: User;
+
   /** User updated */
   @Output() updatedUser: EventEmitter<User> = new EventEmitter();
 
-  /** User */
-  public user: User = {
-    name: null,
-    firstname: null,
-    email: null,
-  };
+  /**
+   * @param {User} user
+   */
+  @Input() set user(user: User) {
+    this._user = { ...user } || {
+      name: null,
+      firstname: null,
+      email: null,
+    };
+  }
 
-  constructor(private userService: UserService) {}
+  /**
+   * @returns {User}
+   */
+  get user(): User {
+    return this._user;
+  }
+
+  constructor(private userService: UserService, private serviceHelper: ServiceHelper) {}
 
   ngOnInit(): void {}
 
@@ -32,28 +45,59 @@ export class UserFormComponent implements OnInit {
    */
   public saveUser(): void {
     if (!this.validateUserForm(this.user)) {
-      Swal.fire({ icon: 'warning', html: 'Please fill all fields.' });
+      this.serviceHelper.fireModalMsg({ icon: 'warning', html: 'Please fill all fields.' });
       return;
     }
-    this.userService.storeUser(this.user).subscribe(
-      (data) => {
-        if (!data || !data.user) {
-          return;
+
+    if (this.user.id) {
+      // update user
+      this.userService.updateUser(this.user).subscribe(
+        (data) => {
+          this.callbackUserSave(data);
+        },
+        (error) => {
+          this.serviceHelper.displayError(error.error);
         }
-        const user = data.user;
-        this.updatedUser.emit(user);
-        this.fireModalMsg({
-          icon: 'success',
-          html: `User <span class="font-weight-bold">${user.firstname} ${user.name}</span> successfully created.`,
-        });
-      },
-      (error) => {
-        this.displayError(error.error);
-      }
-    );
+      );
+    } else {
+      // create user
+      this.userService.storeUser(this.user).subscribe(
+        (data) => {
+          this.callbackUserSave(data);
+        },
+        (error) => {
+          this.serviceHelper.displayError(error.error);
+        }
+      );
+    }
   }
 
   /* PRIVATE */
+
+  /**
+   * Callback user save
+   * @param {*} data
+   * @returns {void}
+   */
+  private callbackUserSave(data: any): void {
+    if (!data || !data.user) {
+      return;
+    }
+    const user = data.user;
+    this.updatedUser.emit(user);
+    this.serviceHelper.fireModalMsg({
+      icon: 'success',
+      html: `User <span class="font-weight-bold">${user.firstname} ${user.name}</span> successfully saved.`,
+    });
+  }
+
+  /**
+   * Get form title (edit|new)
+   * @returns {string}
+   */
+  public getTitleForm(): string {
+    return this.user && this.user.id ? `Edit user id ${this.user.id}` : `New user`;
+  }
 
   /**
    * Validate required user input values
@@ -63,29 +107,5 @@ export class UserFormComponent implements OnInit {
    */
   private validateUserForm(user: User): boolean {
     return Boolean(this.user.name && this.user.firstname && this.user.email);
-  }
-
-  /**
-   * Display error helper
-   *
-   * @param {HttpErrorResponse} error
-   * @returns {void}
-   */
-  private displayError(error: HttpErrorResponse): void {
-    const errors = {
-      default: 'An error has occurred. Please try again later...',
-    };
-    const errorMsg = error && error.error ? error.error : errors.default;
-    this.fireModalMsg({ icon: 'warning', html: errorMsg });
-  }
-
-  /**
-   * Swal fire helper
-   *
-   * @param {*} options
-   * @returns {void}
-   */
-  private fireModalMsg(options: any): void {
-    Swal.fire(options);
   }
 }

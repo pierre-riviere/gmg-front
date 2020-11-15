@@ -12,8 +12,9 @@ import { UserService } from '../../services/user.service';
   providers: [UserService],
 })
 export class UsersComponent implements OnInit {
+  public user: User;
   public users: User[] = [];
-  public isUserFormActive: boolean = true;
+  public isUserFormActive = true;
 
   private getUserSub: Subscription;
 
@@ -54,7 +55,12 @@ export class UsersComponent implements OnInit {
    * @returns {void}
    */
   public displayUserForm(): void {
-    this.isUserFormActive = !this.isUserFormActive;
+    this.user = {
+      name: null,
+      firstname: null,
+      email: null,
+    };
+    this.isUserFormActive = true;
   }
 
   /**
@@ -66,6 +72,28 @@ export class UsersComponent implements OnInit {
     if (user && user.id) {
       this.getUsers();
     }
+  }
+
+  /**
+   * Update user
+   * @param user
+   * @returns {void}
+   */
+  public editUser(user: User): void {
+    this.user = user;
+  }
+
+  /**
+   * Delete user by id
+   * @param {string} userId
+   * @returns {void}
+   */
+  public deleteUser(userId: string): void {
+    // this.userService.deleteUser(userId).subscribe(
+    //    (data) => {},
+    //    (error) => {
+    //    }
+    //  );
   }
 
   /* PRIVATE */

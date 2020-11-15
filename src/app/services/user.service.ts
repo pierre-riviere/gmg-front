@@ -37,4 +37,18 @@ export class UserService extends GMGService {
       })
     );
   }
+
+  /**
+   * Update a user
+   *
+   * @param {User} user
+   * @returns {Observable<*>}
+   */
+  public updateUser(user: User): Observable<any> {
+    return this.http.put(`${this.API_URL}/users/${user.id}`, user).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
 }
