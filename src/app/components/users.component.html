@@ -1,0 +1,23 @@
+<div class="container">
+  <div>>> Create</div>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Firstname</th>
+        <th>Email</th>
+        <th>Updated at</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users">
+        <td>{{ user.id }}</td>
+        <td>{{ user.name }}</td>
+        <td>{{ user.firstname }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.updated_at | date: 'yyyy-mm-dd HH:mm' }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
