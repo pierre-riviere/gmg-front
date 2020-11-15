@@ -13,7 +13,7 @@ export class UserService {
 
   /**
    * Get all users from back api
-   
+   *
    * @returns {Observable<*>}
    */
   public getAllUsers(): Observable<User[]> {

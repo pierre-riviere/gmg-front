@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import Swal from 'sweetalert2';
-import { User } from '../models/user.interface';
-import { UserService } from '../services/user.service';
+import { User } from '../../models/user.interface';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-users',
@@ -15,7 +16,7 @@ export class UsersComponent implements OnInit {
 
   private getUserSub: Subscription;
 
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService, private router: Router) {}
 
   ngOnInit(): void {
     this.getUsers();
@@ -34,6 +35,17 @@ export class UsersComponent implements OnInit {
         this.displayError(error);
       }
     );
+  }
+
+  /**
+   * link to user profile from its id
+   *
+   * @param id
+   */
+  public goToUserProfile(id: string): void {
+    if (id) {
+      this.router.navigate(['/user', id]);
+    }
   }
 
   /**

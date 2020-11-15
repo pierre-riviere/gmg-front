@@ -8,6 +8,7 @@
         <th>Firstname</th>
         <th>Email</th>
         <th>Updated at</th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
@@ -17,6 +18,16 @@
         <td>{{ user.firstname }}</td>
         <td>{{ user.email }}</td>
         <td>{{ user.updated_at | date: 'yyyy-mm-dd HH:mm' }}</td>
+        <td>
+          <button
+            (click)="goToUserProfile(user.id)"
+            type="button"
+            class="btn btn-light"
+            title="Profile of {{ user.firstname }} {{ user.name }}"
+          >
+            <i class="fa fa-eye" aria-hidden="true"></i>
+          </button>
+        </td>
       </tr>
     </tbody>
   </table>
