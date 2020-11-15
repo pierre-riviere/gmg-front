@@ -1,0 +1,43 @@
+<div>
+  <h2 class="text-center">Tasks</h2>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Status</th>
+        <th>Updated at</th>
+        <th class="text-center"><span *ngIf="tasks.length">Edit</span></th>
+        <th class="text-center">
+          <button
+            *ngIf="tasks.length"
+            (click)="deleteTasks()"
+            type="button"
+            class="btn btn-danger"
+            title="Delete selected tasks"
+          >
+            <i class="fa fa-trash-o" aria-hidden="true"></i>
+          </button>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let task of tasks">
+        <td>{{ task.id }}</td>
+        <td>{{ task.name }}</td>
+        <td>{{ task.description }}</td>
+        <td>{{ task.status }}</td>
+        <td>{{ task.updated_at | date: 'yyyy-MM-dd HH:mm' }}</td>
+        <td class="text-center">
+          <button (click)="editTask(task)" type="button" class="btn btn-info" title="Edit task">
+            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+          </button>
+        </td>
+        <td class="text-center">
+          <input type="checkbox" (change)="onChangeDeleteCheck(task.id, $event.target.checked)" />
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

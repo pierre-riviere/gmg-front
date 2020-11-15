@@ -12,6 +12,19 @@ export class UserService extends GMGService {
   }
 
   /**
+   * Get user by id
+   *
+   * @returns {Observable<any>}
+   */
+  public getUser(userId: string): Observable<User> {
+    return this.http.get(`${this.API_URL}/users/${userId}`).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  /**
    * Get all users from back api
    *
    * @returns {Observable<User[]>}
@@ -46,6 +59,19 @@ export class UserService extends GMGService {
    */
   public updateUser(user: User): Observable<any> {
     return this.http.put(`${this.API_URL}/users/${user.id}`, user).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  /**
+   * Delete a user
+   * @param {string} userId
+   * @returns {Observable<*>}
+   */
+  public deleteUser(userId: string): Observable<any> {
+    return this.http.delete(`${this.API_URL}/users/${userId}`).pipe(
       map((res: any) => {
         return res;
       })

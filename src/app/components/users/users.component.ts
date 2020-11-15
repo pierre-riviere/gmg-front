@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import Swal from 'sweetalert2';
+import { ServiceHelper } from '../../helpers/service.helper';
 import { User } from '../../models/user.interface';
 import { UserService } from '../../services/user.service';
 
@@ -9,7 +9,7 @@ import { UserService } from '../../services/user.service';
   selector: 'app-users',
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.scss'],
-  providers: [UserService],
+  providers: [UserService, ServiceHelper],
 })
 export class UsersComponent implements OnInit {
   public user: User;
@@ -18,7 +18,7 @@ export class UsersComponent implements OnInit {
 
   private getUserSub: Subscription;
 
-  constructor(private userService: UserService, private router: Router) {}
+  constructor(private userService: UserService, private router: Router, private serviceHelper: ServiceHelper) {}
 
   ngOnInit(): void {
     this.getUsers();
@@ -34,7 +34,7 @@ export class UsersComponent implements OnInit {
         this.users = data;
       },
       (error) => {
-        this.displayError(error);
+        this.serviceHelper.displayError(error);
       }
     );
   }
@@ -55,11 +55,7 @@ export class UsersComponent implements OnInit {
    * @returns {void}
    */
   public displayUserForm(): void {
-    this.user = {
-      name: null,
-      firstname: null,
-      email: null,
-    };
+    this.initUser();
     this.isUserFormActive = true;
   }
 
@@ -89,22 +85,51 @@ export class UsersComponent implements OnInit {
    * @returns {void}
    */
   public deleteUser(userId: string): void {
-    // this.userService.deleteUser(userId).subscribe(
-    //    (data) => {},
-    //    (error) => {
-    //    }
-    //  );
+    this.userService.deleteUser(userId).subscribe(
+      (data) => {
+        this.callbackUserDelete(data);
+      },
+      (error) => {
+        this.serviceHelper.displayError(error);
+      }
+    );
   }
 
   /* PRIVATE */
 
   /**
-   * Display error helper
-   * @param {any} error
+   * Callback delete user
+   * @param {*} data
    * @returns {void}
    */
-  private displayError(error: any): void {
-    Swal.fire({ icon: 'warning', text: 'An error has occurred. Please try again later...' });
+  private callbackUserDelete(data: any): void {
+    if (!data || !data.user) {
+      return;
+    }
+    const user = data.user;
+
+    if (this.user && this.user.id === user.id) {
+      this.initUser();
+    }
+
+    this.serviceHelper.fireModalMsg({
+      icon: 'success',
+      html: `User <span class="font-weight-bold">${user.firstname} ${user.name}</span> successfully deleted.`,
+    });
+
+    this.getUsers();
+  }
+
+  /**
+   * Init current handled user
+   * @returns {void}
+   */
+  private initUser(): void {
+    this.user = {
+      name: null,
+      firstname: null,
+      email: null,
+    };
   }
 
   /**

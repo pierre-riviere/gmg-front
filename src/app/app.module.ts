@@ -8,9 +8,10 @@ import { AppComponent } from './app.component';
 import { UserFormComponent } from './components/user-form/user-form.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
 import { UsersComponent } from './components/users/users.component';
+import { TasksComponent } from './components/tasks/tasks.component';
 
 @NgModule({
-  declarations: [AppComponent, UsersComponent, UserProfileComponent, UserFormComponent],
+  declarations: [AppComponent, UsersComponent, UserProfileComponent, UserFormComponent, TasksComponent],
   imports: [BrowserModule, FormsModule, AppRoutingModule, HttpClientModule, NgbModule],
   providers: [],
   bootstrap: [AppComponent],
