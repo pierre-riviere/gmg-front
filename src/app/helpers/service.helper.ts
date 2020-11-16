@@ -14,7 +14,7 @@ export class ServiceHelper {
     const errors = {
       default: 'An error has occurred. Please try again later...',
     };
-    const errorMsg = error && error.error && !error.error.message ? error.error : errors.default;
+    const errorMsg = error && error.error && !error.error.type ? error.error : errors.default;
     this.fireModalMsg({ icon: 'warning', html: errorMsg });
   }
 

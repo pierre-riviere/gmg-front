@@ -39,4 +39,34 @@ export class TaskService extends GMGService {
       })
     );
   }
+
+  /**
+   * Update tasks
+   * @param {Task[]} tasks
+   * @param {string} userId
+   * @returns {Observable<*>}
+   */
+  public updateTasks(tasks: Task[], userId: string): Observable<any> {
+    const params = { tasks };
+    return this.http.put(`${this.API_URL}/users/${userId}/tasks`, params).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
+
+  /**
+   * Store new tasks
+   * @param {Task[]} tasks
+   * @param {string} userId
+   * @returns {Observable<*>}
+   */
+  public storeTasks(tasks: Task[], userId: string): Observable<any> {
+    const params = { tasks };
+    return this.http.post(`${this.API_URL}/users/${userId}/tasks`, params).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
 }

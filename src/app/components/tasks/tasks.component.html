@@ -1,43 +1,113 @@
 <div>
-  <h2 class="text-center">Tasks</h2>
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Id</th>
-        <th>Name</th>
-        <th>Description</th>
-        <th>Status</th>
-        <th>Updated at</th>
-        <th class="text-center"><span *ngIf="tasks.length">Edit</span></th>
-        <th class="text-center">
-          <button
-            *ngIf="tasks.length"
-            (click)="deleteTasks()"
-            type="button"
-            class="btn btn-danger"
-            title="Delete selected tasks"
-          >
-            <i class="fa fa-trash-o" aria-hidden="true"></i>
-          </button>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let task of tasks">
-        <td>{{ task.id }}</td>
-        <td>{{ task.name }}</td>
-        <td>{{ task.description }}</td>
-        <td>{{ task.status }}</td>
-        <td>{{ task.updated_at | date: 'yyyy-MM-dd HH:mm' }}</td>
-        <td class="text-center">
-          <button (click)="editTask(task)" type="button" class="btn btn-info" title="Edit task">
-            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-          </button>
-        </td>
-        <td class="text-center">
-          <input type="checkbox" (change)="onChangeDeleteCheck(task.id, $event.target.checked)" />
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <!-- TASK FORM -->
+  <div class="mt-5 card">
+    <h2 class="card-title text-center pt-4">{{ getTitleForm() }} {{ task.id }}</h2>
+
+    <form class="p-3">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input required type="text" name="name" placeholder="Name" class="form-control" [(ngModel)]="task.name" />
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea
+          required
+          rows="3"
+          maxlength="255"
+          name="description"
+          placeholder="Description"
+          class="form-control"
+          [(ngModel)]="task.description"
+        ></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="status">Status</label>
+        <select required type="text" name="status" class="form-control" [(ngModel)]="task.status">
+          <option *ngFor="let statusVal of statusList" [selected]="statusVal === task.status">{{ statusVal }}</option>
+        </select>
+      </div>
+
+      <div>
+        <button *ngIf="!task.id" type="button" class="btn btn-primary" (click)="addTask()" title="Confirm">
+          <i class="fa fa-plus" aria-hidden="true"></i>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- NEW TASKS -->
+  <div *ngIf="newTasks.length" class="newtasks-list mt-5">
+    <div class="row">
+      <h2 class="col text-center">
+        New tasks
+        <button type="button" class="btn btn-primary" (click)="saveNewTasks()" title="Save new tasks">Save</button>
+        <button type="button" class="btn btn-danger ml-3" (click)="clearNewTasks()" title="Clear new tasks">
+          Clear
+        </button>
+      </h2>
+    </div>
+
+    <div class="row task-header">
+      <div class="col">name</div>
+      <div class="col">description</div>
+      <div class="col">status</div>
+    </div>
+
+    <div class="mt-2 p-2 row task-item" *ngFor="let newTask of newTasks">
+      <div class="col">{{ newTask.name }}</div>
+      <div class="col">{{ newTask.description }}</div>
+      <div class="col">{{ newTask.status }}</div>
+    </div>
+  </div>
+
+  <!-- TASK LIST -->
+  <div class="row mt-5">
+    <h2 class="col text-center">
+      Tasks
+      <button *ngIf="task.id" type="button" class="btn btn-primary" (click)="clearNewTask()" title="Add new task">
+        <i class="fa fa-plus" aria-hidden="true"></i>
+      </button>
+
+      <button type="button" class="btn btn-info ml-2" (click)="saveEditedTasks()" title="Save edited tasks">
+        Save edited tasks
+      </button>
+    </h2>
+  </div>
+
+  <div class="row task-header">
+    <div class="col">id</div>
+    <div class="col">name</div>
+    <div class="col">description</div>
+    <div class="col">status</div>
+    <div class="col">updated at</div>
+    <div class="col text-center" *ngIf="tasks.length">Edit</div>
+    <div class="col text-center">
+      <button
+        *ngIf="tasks.length"
+        (click)="deleteTasks()"
+        type="button"
+        class="btn btn-danger"
+        title="Delete selected tasks"
+      >
+        <i class="fa fa-trash-o" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+  <div class="mt-2 p-2 row task-item" *ngFor="let task of tasks">
+    <div class="col">{{ task.id }}</div>
+    <div class="col">{{ task.name }}</div>
+    <div class="col">{{ task.description }}</div>
+    <div class="col">{{ task.status }}</div>
+    <div class="col">{{ task.updated_at | date: 'yyyy-MM-dd HH:mm' }}</div>
+    <div class="col text-center">
+      <button (click)="editTask(task)" type="button" class="btn btn-info" title="Edit task">
+        <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+      </button>
+    </div>
+    <div class="col text-center">
+      <input type="checkbox" (change)="onChangeDeleteCheck(task.id, $event.target.checked)" />
+    </div>
+  </div>
 </div>
